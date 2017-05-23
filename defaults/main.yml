@@ -90,6 +90,7 @@ galaxy_docker_ephemeris_repo: "https://github.com/rhpvorderman/ephemeris.git"
 galaxy_docker_ephemeris_branch: "allfixes"
 galaxy_docker_ephemeris_dir: "/opt/ephemeris"
 
+# Running cluster
 
 #defaults for upgrade
 test: False

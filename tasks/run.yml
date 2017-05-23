@@ -59,6 +59,25 @@
     var: docker_published_ports.split()
     verbosity: 1
 
+- name: Set cluster shared folder
+  set_fact: 
+    galaxy_docker_cluster_shared_folder: " {{optional_environment_settings.GALAXY_CONFIG_CLUSTER_FILES_DIRECTORY}}:{{optional_environment_settings.GALAXY_CONFIG_CLUSTER_FILES_DIRECTORY}}"
+  when:
+    - optional_environment_settings.GALAXY_CONFIG_CLUSTER_FILES_DIRECTORY is defined
+    - optional_environment_settings.GALAXY_CONFIG_CLUSTER_FILES_DIRECTORY != ''
+
+- name: Create exported volumes
+  set_fact:
+    galaxy_docker_volumes: "{{ galaxy_docker_volumes + item }}"
+  with_items:
+    - "{{docker_export_location}}:/export/"
+    - "{{galaxy_docker_cluster_shared_folder | default('')}}"
+
+- name: Show volumes
+  debug: 
+    var: galaxy_docker_volumes.split(' ')
+    verbosity: 0
+
 - name: Make sure export location exists
   file:
     path: "{{docker_export_location}}"
@@ -92,7 +111,7 @@
 - name: Restart the docker container
   docker_container:
     env_file: "{{docker_environment_file_location}}"
-    volumes: "{{docker_export_location}}:/export/"
+    volumes: "{{galaxy_docker_volumes.split(' ')}}"
     image: "{{docker_image}}"
     name: "{{docker_container_name}}"
     published_ports: "{{docker_published_ports.split(' ')}}"
