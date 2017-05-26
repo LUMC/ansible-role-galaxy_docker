@@ -91,6 +91,9 @@ galaxy_docker_ephemeris_branch: "allfixes"
 galaxy_docker_ephemeris_dir: "/opt/ephemeris"
 
 # Running cluster
+galaxy_docker_sge_environment:
+  DRMAA_LIBRARY_PATH: /usr/lib/libdrmaa.so
+  SGE_ROOT: /var/lib/gridengine
 
 #defaults for upgrade
 test: False

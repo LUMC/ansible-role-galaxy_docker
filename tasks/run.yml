@@ -59,6 +59,10 @@
     var: docker_published_ports.split()
     verbosity: 1
 
+- name: Set cluster shared folder
+  set_fact:
+    galaxy_docker_cluster_shared_folder: " {{optional_environment_settings.GALAXY_CONFIG_CLUSTER_FILES_DIRECTORY}}:{{optional_environment_settings.GALAXY_CONFIG_CLUSTER_FILES_DIRECTORY}}"
+
 - name: Create exported volumes
   set_fact:
     galaxy_docker_volumes: "{{ galaxy_docker_volumes + item }}"

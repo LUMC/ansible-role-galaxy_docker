@@ -37,6 +37,9 @@
 - include: addldap.yml
   when: addldap
 
+- include: setupsge.yml
+  when: setupsge
+
 - include: cronbackupdb.yml
   when: cronbackupdb
 

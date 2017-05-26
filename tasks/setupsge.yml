@@ -21,7 +21,29 @@
     dest: "{{docker_export_location}}/act_qmaster}}"
     src: "act_qmaster.j2"
 
-- name: Set cluster shared folder
-  set_fact: 
-    galaxy_docker_cluster_shared_folder: " {{optional_environment_settings.GALAXY_CONFIG_CLUSTER_FILES_DIRECTORY}}:{{optional_environment_settings.GALAXY_CONFIG_CLUSTER_FILES_DIRECTORY}}"
+#- name: Add necessary environment variables
+#  set_fact:  
+#    optional_environment_settings: "{{optional_environment_settings | combine(galaxy_docker_sge_environment)}}"
+
+- name: Copy sudoers file to export location
+  copy:
+    src: galaxy_sudoers
+    dest: "{{ docker_export_location }}/galaxy_sudoers"
+    mode: 0440
+
+- name: copy sudo
+  command: "docker exec {{docker_container_name}} {{command}}"
+  vars:
+    command: "cp -p /export/galaxy_sudoers /etc/sudoers.d/galaxy"
+
+- name: Stop galaxy
+  command: "docker exec {{docker_container_name}} {{command}}"
+  vars:
+    command: "supervisorctl stop galaxy:*"
+
+- name: Start galaxy
+  command: "docker exec {{docker_container_name}} {{command}}"
+  vars:
+    command: "/usr/bin/startup"
+
 
