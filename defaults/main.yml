@@ -135,3 +135,4 @@ installtools: False
 extractdb: False
 deletegalaxy: False
 installgenomes: False
+setupsge: False
